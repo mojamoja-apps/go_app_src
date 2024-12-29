@@ -3,8 +3,9 @@ package model
 import (
 	"database/sql"
 	"fmt"
-	"time"
 	"github.com/go-sql-driver/mysql"
+	"os"
+	"time"
 )
 
 func GetUsers() ([]map[string]interface{}, error) {
@@ -13,12 +14,16 @@ func GetUsers() ([]map[string]interface{}, error) {
 		return nil, fmt.Errorf("failed to load location: %v", err)
 	}
 
-	// MySQL設定
+	dbName := os.Getenv("DB_NAME")
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASS")
+	dbAddr := os.Getenv("DB_ADDR")
+
 	c := mysql.Config{
-		DBName:    "go_app",
-		User:      "developer",
-		Passwd:    "developer",
-		Addr:      "db-server",
+		DBName:    dbName,
+		User:      dbUser,
+		Passwd:    dbPass,
+		Addr:      dbAddr,
 		Net:       "tcp",
 		ParseTime: true,
 		Collation: "utf8mb4_unicode_ci",

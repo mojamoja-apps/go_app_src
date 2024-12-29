@@ -1,11 +1,11 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	"go_app/model"
 	"net/http"
 	"strconv"
-	"github.com/gin-gonic/gin"
-	"github.com/gin-contrib/cors"
-	"go_app/model"
 )
 
 func main() {

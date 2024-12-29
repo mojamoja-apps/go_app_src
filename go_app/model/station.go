@@ -3,8 +3,9 @@ package model
 import (
 	"database/sql"
 	"fmt"
-	"time"
 	"github.com/go-sql-driver/mysql"
+	"os"
+	"time"
 )
 
 func GetStations(neLat, neLng, swLat, swLng float64) ([]map[string]interface{}, error) {
@@ -13,12 +14,16 @@ func GetStations(neLat, neLng, swLat, swLng float64) ([]map[string]interface{}, 
 		return nil, fmt.Errorf("failed to load location: %v", err)
 	}
 
-	// MySQL設定
+	dbName := os.Getenv("DB_NAME")
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASS")
+	dbAddr := os.Getenv("DB_ADDR")
+
 	c := mysql.Config{
-		DBName:    "go_app",
-		User:      "developer",
-		Passwd:    "developer",
-		Addr:      "db-server",
+		DBName:    dbName,
+		User:      dbUser,
+		Passwd:    dbPass,
+		Addr:      dbAddr,
 		Net:       "tcp",
 		ParseTime: true,
 		Collation: "utf8mb4_unicode_ci",
@@ -36,7 +41,7 @@ func GetStations(neLat, neLng, swLat, swLng float64) ([]map[string]interface{}, 
 	query := "SELECT * FROM stations WHERE lat <= ? AND lat >= ? AND lon <= ? AND lon >= ?"
 	fmt.Println("Executing query:", query, neLat, swLat, neLng, swLng) // クエリを出力
 
-rows, err := db.Query(query, neLat, swLat, neLng, swLng)
+	rows, err := db.Query(query, neLat, swLat, neLng, swLng)
 	if err != nil {
 		return nil, fmt.Errorf("failed to execute query: %v", err)
 	}
