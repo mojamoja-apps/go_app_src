@@ -3,12 +3,19 @@ package main
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 	"go_app/model"
+	"log"
 	"net/http"
 	"strconv"
 )
 
 func main() {
+	// .envファイルを読み込む
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
 
 	r := gin.Default()
 
