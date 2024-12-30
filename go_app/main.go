@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"os"
 )
 
 func main() {
@@ -67,5 +68,14 @@ func main() {
 			"data": stations,
 		})
 	})
-	r.Run()
+
+	ENABLE_SSL := os.Getenv("ENABLE_SSL")
+	SSL_CERT_PATH := os.Getenv("SSL_CERT_PATH")
+	SSL_KEY_PATH := os.Getenv("SSL_KEY_PATH")
+
+	if (ENABLE_SSL == "true") {
+		r.RunTLS(":18443", SSL_CERT_PATH, SSL_KEY_PATH)
+	} else {
+		r.Run()
+	}
 }
