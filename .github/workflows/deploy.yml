@@ -27,9 +27,11 @@ jobs:
           go build -o go_app
 
       - name: Deploy to EC2
+        env:
+          SSH_KEY: 
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
           scp -r ./go_app/go_app ec2-user@54.95.14.178:/var/www/google-map-app/go_app
