@@ -13,15 +13,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-- name: Debug .env creation
-  run: |
-    pwd
-    cd ./go_app
-    echo "Creating .env file"
-    echo "hage" > .env
-    echo "Contents of .env:"
-    cat .env
-    ls -l
+      - name: Debug .env creation
+        run: |
+          pwd
+          cd ./go_app
+          echo "Creating .env file"
+          echo "hage" > .env
+          echo "Contents of .env:"
+          cat .env
+          ls -l
 
       # # .env.productionの内容は、secretsに登録しておく ENV_PRODUCTION
       # - name: Create .env (production)
