@@ -18,14 +18,10 @@ jobs:
         env:
           ENV_PRODUCTION: ${{ secrets.ENV_PRODUCTION }}
         run: |
-          pwd
-          ls -l
           cd ./go_app
-          echo "hoge" > hogefile
           echo "$ENV_PRODUCTION" > .env
-          cat .env
           pwd
-          ls -l
+          ls -la
 
 
       # - name: Build Go application
