@@ -28,7 +28,7 @@ jobs:
 
       - name: Deploy to EC2
         env:
-          SSH_KEY: 
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
           mkdir -p ~/.ssh
           echo "$SSH_KEY" > ~/.ssh/id_rsa
