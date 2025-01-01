@@ -35,7 +35,8 @@ jobs:
           echo "$SSH_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-          scp -r ./go_app/go_app ec2-user@${{ secrets.EC2_HOST }}:/var/www/google-map-app/go_app
+          scp -r ./go_app/go_app ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/google-map-app/go_app
+          scp -r ./go_app/.env ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/google-map-app/.env
 
       - name: Restart service
         uses: appleboy/ssh-action@v0.1.6
