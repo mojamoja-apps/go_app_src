@@ -25,35 +25,21 @@ jobs:
           cd ./go_app
           go mod tidy
           go build -o go_app
-          ls -l go_app # ビルド結果を確認
 
-      - name: Verify build output
-        run: |
-          if [ ! -f ./go_app/go_app ]; then
-            echo "Build output not found!"
-            exit 1
-          fi
+      - name: Upload binary to EC2
+        uses: appleboy/scp-action@v0.1.2
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: ./go_app/go_app
+          target: /var/www/google-map-app/go_app
 
-      - name: Deploy to EC2
+      - name: Restart service
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # デプロイ先ディレクトリの作成
-            mkdir -p /var/www/google-map-app
-            # 古いアプリを削除して新しいバイナリをアップロード
-            rm -f /var/www/google-map-app/go_app
-            # ホストキーをknown_hostsに追加
-            ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts || true
-            # ローカルファイルの状態確認
-            echo "Checking local files before scp:"
-            pwd
-            ls -l
-            ls -l ./go_app
-            ls -l ./go_app/go_app
-            # ファイルをコピー
-            scp ./go_app/go_app ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/google-map-app/go_app
-            # サービス再起動
             sudo systemctl restart go_app.service
