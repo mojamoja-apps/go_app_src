@@ -39,15 +39,15 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # デプロイ先ディレクトリの作成
             mkdir -p /var/www/google-map-app
-            # 古いアプリの削除
+            # 古いアプリを削除して新しいバイナリをアップロード
             rm -f /var/www/google-map-app/go_app
             # ホストキーをknown_hostsに追加
             ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts || true
-            # ローカルで生成されたgo_appを転送
+            # ファイルをコピー
             scp ./go_app/go_app ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/google-map-app/go_app
-            # サービスを再起動
+            # サービス再起動
             sudo systemctl restart go_app.service
