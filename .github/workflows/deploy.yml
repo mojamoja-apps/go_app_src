@@ -13,6 +13,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Change directory
+        run: |
+          cd ./go_app
+
       - name: Build Go application
         run: |
           go build -o go_app
