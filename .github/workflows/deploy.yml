@@ -13,28 +13,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Debug .env creation
+      # .env.productionの内容は、secretsに登録しておく ENV_PRODUCTION
+      - name: Create .env (production)
+        env:
+          ENV_PRODUCTION: ${{ secrets.ENV_PRODUCTION }}
         run: |
           pwd
-          cd ./go_app
-          echo "Creating .env file"
-          echo "hage" > .env
-          echo "Contents of .env:"
-          cat .env
           ls -l
-
-      # # .env.productionの内容は、secretsに登録しておく ENV_PRODUCTION
-      # - name: Create .env (production)
-      #   env:
-      #     ENV_PRODUCTION: ${{ secrets.ENV_PRODUCTION }}
-      #   run: |
-      #     pwd
-      #     ls -l
-      #     cd ./go_app
-      #     echo "hoge" > hogefile
-      #     echo "hage" > .env
-      #     pwd
-      #     ls -l
+          cd ./go_app
+          echo "hoge" > hogefile
+          echo "$ENV_PRODUCTION" > .env
+          cat .env
+          pwd
+          ls -l
 
 
       # - name: Build Go application
