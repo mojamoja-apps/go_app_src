@@ -47,6 +47,12 @@ jobs:
             rm -f /var/www/google-map-app/go_app
             # ホストキーをknown_hostsに追加
             ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts || true
+            # ローカルファイルの状態確認
+            echo "Checking local files before scp:"
+            pwd
+            ls -l
+            ls -l ./go_app
+            ls -l ./go_app/go_app
             # ファイルをコピー
             scp ./go_app/go_app ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/google-map-app/go_app
             # サービス再起動
