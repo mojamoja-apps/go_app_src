@@ -13,12 +13,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Change directory
-        run: |
-          cd ./go_app
-
       - name: Build Go application
         run: |
+          cd ./go_app
+          go mod tidy
           go build -o go_app
 
       # .env.productionの内容は、secretsに登録しておく ENV_PRODUCTION
