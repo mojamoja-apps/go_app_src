@@ -40,7 +40,7 @@ jobs:
             # ホストキーをknown_hostsに追加
             ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
             # ファイルをコピー
-            scp ./go_app/go_app ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/google-map-app/
+            scp go_app/go_app ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/google-map-app/
             # サービス再起動
             sudo systemctl restart go_app.service
 
