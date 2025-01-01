@@ -19,12 +19,19 @@ jobs:
           ENV_PRODUCTION: ${{ secrets.ENV_PRODUCTION }}
         run: |
           echo "$ENV_PRODUCTION" > go_app/.env
+                      pwd 
+            ls -l
+            ls -l go_app/
+
 
       - name: Build Go application
         run: |
           cd ./go_app
           go mod tidy
           go build -o go_app
+                      pwd 
+            ls -l
+
 
       - name: Deploy to EC2
         env:
