@@ -37,7 +37,7 @@ jobs:
             mkdir -p /var/www/google-map-app
             # 古いアプリを削除して新しいバイナリをアップロード
             rm -f /var/www/google-map-app/go_app
-            scp go_app ec2-user@${{ secrets.EC2_HOST }}:/var/www/google-map-app/
+            scp ./go_app/go_app ec2-user@${{ secrets.EC2_HOST }}:/var/www/google-map-app/
             # サービス再起動
-            sudo systemctl start go_app.service
+            sudo systemctl restart go_app.service
 
