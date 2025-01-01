@@ -26,14 +26,13 @@ jobs:
           go mod tidy
           go build -o go_app
 
-      - name: Upload binary to EC2
-        uses: appleboy/scp-action@v0.1.2
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: ./go_app/go_app
-          target: /var/www/google-map-app/go_app
+      - name: Deploy to EC2
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          scp -r ./go_app/go_app ec2-user@54.95.14.178:/var/www/google-map-app/go_app
 
       - name: Restart service
         uses: appleboy/ssh-action@v0.1.6
