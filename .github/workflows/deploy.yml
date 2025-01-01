@@ -22,7 +22,7 @@ jobs:
           ls -l
           cd ./go_app
           echo "hoge" > hogefile
-          echo "$ENV_PRODUCTION" > .env
+          echo "hage" > .env
           pwd
           ls -l
 
