@@ -20,34 +20,28 @@ jobs:
         run: |
           cd ./go_app
           echo "$ENV_PRODUCTION" > .env
-          pwd
-          ls -la
 
+      - name: Build Go application
+        run: |
+          cd ./go_app
+          go mod tidy
+          go build -o go_app
 
-      # - name: Build Go application
-      #   run: |
-      #     cd ./go_app
-      #     go mod tidy
-      #     go build -o go_app
-      #                 pwd
-      #       ls -l
+      - name: Deploy to EC2
+        env:
+          SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+          scp -r ./go_app/go_app ec2-user@${{ secrets.EC2_HOST }}:/var/www/google-map-app/go_app
 
-
-      # - name: Deploy to EC2
-      #   env:
-      #     SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
-      #   run: |
-      #     mkdir -p ~/.ssh
-      #     echo "$SSH_KEY" > ~/.ssh/id_rsa
-      #     chmod 600 ~/.ssh/id_rsa
-      #     ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
-      #     scp -r ./go_app/go_app ec2-user@${{ secrets.EC2_HOST }}:/var/www/google-map-app/go_app
-
-      # - name: Restart service
-      #   uses: appleboy/ssh-action@v0.1.6
-      #   with:
-      #     host: ${{ secrets.EC2_HOST }}
-      #     username: ${{ secrets.EC2_USER }}
-      #     key: ${{ secrets.EC2_SSH_KEY }}
-      #     script: |
-      #       sudo systemctl restart go_app.service
+      - name: Restart service
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            sudo systemctl restart go_app.service
