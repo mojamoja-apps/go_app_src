@@ -18,6 +18,14 @@ jobs:
           cd ./go_app
           go mod tidy
           go build -o go_app
+          ls -l go_app # ビルド結果を確認
+
+      - name: Verify build output
+        run: |
+          if [ ! -f ./go_app/go_app ]; then
+            echo "Build output not found!"
+            exit 1
+          fi
 
       # .env.productionの内容は、secretsに登録しておく ENV_PRODUCTION
       - name: Create .env (production)
@@ -38,9 +46,8 @@ jobs:
             # 古いアプリを削除して新しいバイナリをアップロード
             rm -f /var/www/google-map-app/go_app
             # ホストキーをknown_hostsに追加
-            ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+            ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts || true
             # ファイルをコピー
             scp ./go_app/go_app ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/google-map-app/
             # サービス再起動
             sudo systemctl restart go_app.service
-
